@@ -1,6 +1,6 @@
 package service
 
-import "github.com/MarcinBondaruk/gokuk/api/request"
+import "github.com/MarcinBondaruk/gokuk/application/api/request"
 
 type RecipeServiceImpl struct {
 }

@@ -3,7 +3,7 @@ package controller
 import (
 	"net/http"
 
-	"github.com/MarcinBondaruk/gokuk/api/request"
+	"github.com/MarcinBondaruk/gokuk/application/api/request"
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,6 +12,7 @@ func (c Controller) CreateMeal(ctx *gin.Context) {
 
 	if err := ctx.ShouldBindJSON(reqBody); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
 	}
 
 	ctx.JSON(http.StatusOK, nil)
