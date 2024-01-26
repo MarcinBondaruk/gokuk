@@ -1,14 +1,19 @@
 package controller
 
 import (
-	"log"
 	"net/http"
 
+	"github.com/MarcinBondaruk/gokuk/api/request"
 	"github.com/gin-gonic/gin"
 )
 
 func (c Controller) CreateMeal(ctx *gin.Context) {
-	log.Println("new meal created")
+	var reqBody request.AddRecipeRequest
+
+	if err := ctx.ShouldBindJSON(reqBody); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err})
+	}
+
 	ctx.JSON(http.StatusOK, nil)
 }
 
