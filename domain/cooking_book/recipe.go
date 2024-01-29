@@ -1,4 +1,4 @@
-package recipe
+package cooking_book
 
 import "github.com/google/uuid"
 
