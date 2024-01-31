@@ -1,5 +1,6 @@
 # About Gokuk
-Domestic meal planner and shopping helper
+Domestic meal planner and shopping helper  
+API: https://marcinbondaruk.github.io/gokuk/
 
 ## Main Functionalities
 1. Add Recipe
