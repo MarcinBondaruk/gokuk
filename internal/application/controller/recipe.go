@@ -3,7 +3,7 @@ package controller
 import (
 	"net/http"
 
-	"github.com/MarcinBondaruk/gokuk/application/api/request"
+	"github.com/MarcinBondaruk/gokuk/internal/application/api/request"
 	"github.com/gin-gonic/gin"
 )
 

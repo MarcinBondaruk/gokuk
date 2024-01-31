@@ -3,7 +3,7 @@ package router
 import (
 	"net/http"
 
-	"github.com/MarcinBondaruk/gokuk/application/controller"
+	"github.com/MarcinBondaruk/gokuk/internal/application/controller"
 
 	"github.com/gin-gonic/gin"
 )
