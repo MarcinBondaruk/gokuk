@@ -3,8 +3,8 @@ package main
 import (
 	"net/http"
 
-	"github.com/MarcinBondaruk/gokuk/application/controller"
-	"github.com/MarcinBondaruk/gokuk/application/router"
+	"github.com/MarcinBondaruk/gokuk/internal/application/controller"
+	"github.com/MarcinBondaruk/gokuk/internal/application/router"
 )
 
 func main() {
