@@ -23,5 +23,8 @@ func NewRouter(ctrl controller.Controller) *gin.Engine {
 	recipes.GET("", ctrl.GetRecipes)
 	recipes.GET("/:recipeId", ctrl.GetRecipeById)
 
+	products := apiV1.Group("/products")
+	products.GET("", ctrl.GetProducts)
+
 	return router
 }
