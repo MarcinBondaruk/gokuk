@@ -1,6 +1,6 @@
 package repository
 
-import "github.com/MarcinBondaruk/gokuk/domain/cooking_book"
+import "github.com/MarcinBondaruk/gokuk/internal/domain/cooking_book"
 
 type PostgresRecipeRepo struct {
 }
