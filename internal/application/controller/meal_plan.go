@@ -8,7 +8,7 @@ import (
 )
 
 func (c Controller) CreateMealPlan(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, response.MealPlanResponse{})
+	ctx.JSON(http.StatusCreated, response.MealPlanResponse{})
 }
 
 func (c Controller) GetShoppingListForMealPlan(ctx *gin.Context) {
