@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/MarcinBondaruk/gokuk/internal/application/controller"
+	"github.com/gin-contrib/pprof"
 
 	"github.com/gin-gonic/gin"
 )
@@ -31,5 +32,6 @@ func NewRouter(ctrl controller.Controller) *gin.Engine {
 	products := apiV1.Group("/products")
 	products.GET("", ctrl.GetProducts)
 
+	pprof.Register(router)
 	return router
 }
