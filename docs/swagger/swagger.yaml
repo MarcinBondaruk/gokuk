@@ -11,7 +11,7 @@ paths:
     get:
       summary: Returns a list of recipes.
       responses:
-        '200':    # status code
+        '200':
           description: A JSON array of user names
           content:
             application/json:
@@ -94,14 +94,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#components/schemas/MealPlan"
+              $ref: "#/components/schemas/MealPlan"
       responses:
         '201':
           description: Meal plan created
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/MealPlan"
+                $ref: "#/components/schemas/MealPlan"
         '400':
           description: Application was unabled to create new Meal Plan with given parameters
           content:
@@ -138,6 +138,9 @@ components:
   schemas:
     Error:
       type: object
+      required:
+        - code
+        - message
       properties:
         code:
           type: string
@@ -146,16 +149,25 @@ components:
           type: string
     Ingredient:
       type: object
+      required:
+        - productId
+        - amount
+        - unit
       properties:
         productId:
           type: string
           format: uuid
-        amout:
+        amount:
           type: integer
         unit:
           type: string
     Recipe:
       type: object
+      required:
+        - id
+        - title
+        - ingredients
+        - description
       properties:
         id:
           type: string
@@ -170,6 +182,9 @@ components:
           type: string
     MealPlan:
       type: object
+      required:
+        - id
+        - recipeIds
       properties:
         id:
           type: string
@@ -181,6 +196,10 @@ components:
             format: uuid
     Product:
       type: object
+      required:
+        - id
+        - name
+        - producer
       properties:
         id:
           type: string
