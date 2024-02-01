@@ -16,7 +16,7 @@ const (
 	dbname   = "gokuk"
 )
 
-func GetConnection() *gorm.DB {
+func GetPostgresConnection() *gorm.DB {
 	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s", host, port, user, password, dbname)
 	db, err := gorm.Open(postgres.Open(dsn))
 
@@ -25,4 +25,18 @@ func GetConnection() *gorm.DB {
 	}
 
 	return db
+}
+
+func ClosePostgresConnection(db *gorm.DB) {
+	if db != nil {
+		sqlDB, err := db.DB()
+		if err != nil {
+			log.Fatal("failed to get database object. err:", err)
+		}
+
+		err = sqlDB.Close()
+		if err != nil {
+			log.Fatal("failed to close database connection. err:", err)
+		}
+	}
 }
