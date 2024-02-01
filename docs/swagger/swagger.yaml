@@ -1,13 +1,11 @@
 openapi: 3.0.0
 info:
-  title: Sample API
-  description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
-  version: 0.1.9
+  title: Gokuk API
+  description: Personal meal planner and shopping helper
+  version: 0.0.0
 servers:
-  - url: http://api.example.com/v1
-    description: Optional server description, e.g. Main (production) server
-  - url: http://staging-api.example.com
-    description: Optional server description, e.g. Internal staging server for testing
+  - url: http://gokuk.bendit.dev
+    description: Public instance
 paths:
   /api/v1/recipes:
     get:
@@ -44,6 +42,7 @@ paths:
                 $ref: "#/components/schemas/Error"
   /api/v1/recipes/shopping-list:
     post:
+      summary: Generate shopping list from recipes
       requestBody:
         required: true
         content:
@@ -55,7 +54,7 @@ paths:
                 format: uuid
       responses:
         '200':
-          description: Returns shopping list based on list of recipes
+          description: Shopping list based on list of recipes
           content:
             application/json:
               schema:
@@ -89,7 +88,7 @@ paths:
                 $ref: "#/components/schemas/Error"
   /api/v1/meal-plans:
     post:
-      description: Create new meal plan
+      summary: Create new meal plan
       requestBody:
         required: true
         content:
@@ -111,7 +110,7 @@ paths:
                 $ref: "#/components/schemas/Error"
   /api/v1/meal-plans/{mealPlanId}/shopping-list:
     get:
-      description: Returns shopping list based on meal plan
+      summary: Returns shopping list based on meal plan
       parameters:
         - name: mealPlanId
           in: path
