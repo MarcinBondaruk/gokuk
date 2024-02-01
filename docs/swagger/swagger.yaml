@@ -42,7 +42,26 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-
+  /api/v1/recipes/shopping-list:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+                format: uuid
+      responses:
+        '200':
+          description: Returns shopping list based on list of recipes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
   /api/v1/recipes/{recipeId}:
     get:
       summary: Get recipe with recipeId
@@ -90,6 +109,32 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+  /api/v1/meal-plans/{mealPlanId}/shopping-list:
+    get:
+      description: Returns shopping list based on meal plan
+      parameters:
+        - name: mealPlanId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: List of products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+        '404':
+          description: No mealplan of given id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
 components:
   schemas:
     Error:
@@ -99,6 +144,16 @@ components:
           type: string
           format: uuid
         message:
+          type: string
+    Ingredient:
+      type: object
+      properties:
+        productId:
+          type: string
+          format: uuid
+        amout:
+          type: integer
+        unit:
           type: string
     Recipe:
       type: object
@@ -111,7 +166,7 @@ components:
         ingredients:
           type: array
           items:
-            type: string
+            $ref: "#/components/schemas/Ingredient"
         description:
           type: string
     MealPlan:
@@ -125,4 +180,24 @@ components:
           items:
             type: string
             format: uuid
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        producer:
+          type: string
+    ShoppingList:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        products:
+          type: array
+          items:
+            $ref: "#/components/schemas/Product"
 
