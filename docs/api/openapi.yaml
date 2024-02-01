@@ -18,7 +18,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Recipe"
+                  $ref: "#/components/schemas/RecipeResponse"
     post:
       summary: Create new recipe
       requestBody:
@@ -26,14 +26,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Recipe"
+              $ref: "#/components/schemas/RecipeRequest"
       responses:
         '201':
           description: Recipe created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Recipe"
+                $ref: "#/components/schemas/RecipeResponse"
         '400':
           description: Application was unabled to create new recipe with given parameters
           content:
@@ -60,7 +60,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Product"
+                  $ref: "#/components/schemas/ShoppingListResponse"
   /api/v1/recipes/{recipeId}:
     get:
       summary: Get recipe with recipeId
@@ -78,7 +78,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Recipe"
+                $ref: "#/components/schemas/RecipeResponse"
 
         '404':
           description: Recipe with given id does not exist
@@ -94,14 +94,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/MealPlan"
+              $ref: "#/components/schemas/MealPlanRequest"
       responses:
         '201':
           description: Meal plan created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/MealPlan"
+                $ref: "#/components/schemas/MealPlanResponse"
         '400':
           description: Application was unabled to create new Meal Plan with given parameters
           content:
@@ -126,7 +126,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Product"
+                  $ref: "#/components/schemas/ShoppingListResponse"
         '404':
           description: No mealplan of given id
           content:
@@ -161,7 +161,22 @@ components:
           type: integer
         unit:
           type: string
-    Recipe:
+    RecipeRequest:
+      type: object
+      required:
+        - title
+        - ingredients
+        - description
+      properties:
+        title:
+          type: string
+        ingredients:
+          type: array
+          items:
+            $ref: "#/components/schemas/Ingredient"
+        description:
+          type: string
+    RecipeResponse:
       type: object
       required:
         - id
@@ -180,7 +195,7 @@ components:
             $ref: "#/components/schemas/Ingredient"
         description:
           type: string
-    MealPlan:
+    MealPlanRequest:
       type: object
       required:
         - id
@@ -194,7 +209,31 @@ components:
           items:
             type: string
             format: uuid
-    Product:
+    MealPlanResponse:
+      type: object
+      required:
+        - id
+        - recipeIds
+      properties:
+        id:
+          type: string
+          format: uuid
+        recipeIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+    ProductRequest:
+      type: object
+      required:
+        - name
+        - producer
+      properties:
+        name:
+          type: string
+        producer:
+          type: string
+    ProductResponse:
       type: object
       required:
         - id
@@ -208,7 +247,7 @@ components:
           type: string
         producer:
           type: string
-    ShoppingList:
+    ShoppingListResponse:
       type: object
       properties:
         id:
