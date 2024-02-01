@@ -12,7 +12,7 @@ func (c Controller) CreateRecipe(ctx *gin.Context) {
 	var reqBody request.RecipeRequest
 
 	if err := ctx.ShouldBindJSON(reqBody); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err})
+		ctx.JSON(http.StatusBadRequest, response.ErrorResponse{})
 		return
 	}
 
