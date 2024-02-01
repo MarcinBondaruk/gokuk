@@ -26,3 +26,7 @@ func (c Controller) GetRecipes(ctx *gin.Context) {
 func (c Controller) GetRecipeById(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response.RecipeResponse{})
 }
+
+func (c Controller) CreateShoppingListFromRecipes(ctx *gin.Context) {
+	ctx.JSON(http.StatusCreated, response.ShoppingListResponse{})
+}
