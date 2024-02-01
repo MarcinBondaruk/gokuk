@@ -4,10 +4,11 @@ import (
 	"net/http"
 
 	"github.com/MarcinBondaruk/gokuk/internal/application/api/request"
+	"github.com/MarcinBondaruk/gokuk/internal/application/api/response"
 	"github.com/gin-gonic/gin"
 )
 
-func (c Controller) CreateMeal(ctx *gin.Context) {
+func (c Controller) CreateRecipe(ctx *gin.Context) {
 	var reqBody request.RecipeRequest
 
 	if err := ctx.ShouldBindJSON(reqBody); err != nil {
@@ -15,9 +16,13 @@ func (c Controller) CreateMeal(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, nil)
+	ctx.JSON(http.StatusOK, response.RecipeResponse{})
 }
 
-func (c Controller) GetMeal(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, gin.H{"recipeId": ctx.Param("recipeId"), "title": "Schabowe babci", "desc": "lorem ipsum"})
+func (c Controller) GetRecipes(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK, []response.RecipeResponse{})
+}
+
+func (c Controller) GetRecipeById(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK, response.RecipeResponse{})
 }

@@ -19,8 +19,9 @@ func NewRouter(ctrl controller.Controller) *gin.Engine {
 
 	apiV1 := router.Group("/api/v1")
 	recipes := apiV1.Group("/recipes")
-	recipes.POST("", ctrl.CreateMeal)
-	recipes.GET("/:recipeId", ctrl.GetMeal)
+	recipes.POST("", ctrl.CreateRecipe)
+	recipes.GET("", ctrl.GetRecipes)
+	recipes.GET("/:recipeId", ctrl.GetRecipeById)
 
 	return router
 }
