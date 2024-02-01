@@ -8,7 +8,7 @@ import (
 )
 
 func (c Controller) CreateMeal(ctx *gin.Context) {
-	var reqBody request.AddRecipeRequest
+	var reqBody request.RecipeRequest
 
 	if err := ctx.ShouldBindJSON(reqBody); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err})

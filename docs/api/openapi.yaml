@@ -39,7 +39,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ErrorResponse"
   /api/v1/recipes/shopping-list:
     post:
       summary: Generate shopping list from recipes
@@ -85,7 +85,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ErrorResponse"
   /api/v1/meal-plans:
     post:
       summary: Create new meal plan
@@ -107,7 +107,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ErrorResponse"
   /api/v1/meal-plans/{mealPlanId}/shopping-list:
     get:
       summary: Returns shopping list based on meal plan
@@ -132,11 +132,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ErrorResponse"
 
 components:
   schemas:
-    Error:
+    ErrorResponse:
       type: object
       required:
         - code
@@ -256,5 +256,5 @@ components:
         products:
           type: array
           items:
-            $ref: "#/components/schemas/Product"
+            $ref: "#/components/schemas/ProductResponse"
 
