@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  title: Gokuk API
+  title: GoKuK API
   description: Personal meal planner and shopping helper
   version: 0.0.0
 servers:

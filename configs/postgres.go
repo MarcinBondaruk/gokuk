@@ -29,12 +29,12 @@ func GetPostgresConnection() *gorm.DB {
 
 func ClosePostgresConnection(db *gorm.DB) {
 	if db != nil {
-		sqlDB, err := db.DB()
+		dbObj, err := db.DB()
 		if err != nil {
 			log.Fatal("failed to get database object. err:", err)
 		}
 
-		err = sqlDB.Close()
+		err = dbObj.Close()
 		if err != nil {
 			log.Fatal("failed to close database connection. err:", err)
 		}
