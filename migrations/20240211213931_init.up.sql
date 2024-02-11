@@ -10,6 +10,7 @@ CREATE TABLE recipes (
 );
 
 CREATE TABLE recipe_ingredient (
+    id uuid PRIMARY KEY,
     product_id REFERENCES products(id),
     recipe_id REFERENCES recipes(id) ON DELETE CASCADE,
     amout INT NOT NULL,
