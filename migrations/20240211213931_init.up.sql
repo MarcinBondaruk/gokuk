@@ -1,6 +1,6 @@
 CREATE TABLE products (
     id uuid PRIMARY KEY,
-    name VARCHAR(32)
+    name VARCHAR(32) NOT NULL
 );
 
 CREATE TABLE recipes (
@@ -12,6 +12,6 @@ CREATE TABLE recipes (
 CREATE TABLE recipe_ingredient (
     product_id REFERENCES products(id),
     recipe_id REFERENCES recipes(id) ON DELETE CASCADE,
-    amout INT,
-    unit VARCHAR(2)
+    amout INT NOT NULL,
+    unit VARCHAR(2) NOT NULL
 );
