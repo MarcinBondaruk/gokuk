@@ -188,13 +188,13 @@ components:
       type: object
       required:
         - productId
-        - amount
+        - quantity
         - unit
       properties:
         productId:
           type: string
           format: uuid
-        amount:
+        quantity:
           type: integer
         unit:
           type: string
