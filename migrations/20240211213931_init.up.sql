@@ -31,6 +31,6 @@ CREATE TABLE meal_plan (
 
 CREATE TABLE meal_plan_recipe (
     id uuid PRIMARY KEY,
-    meal_plan_id REFERENCES meal_plan(id) ON DELETE CASCADE
+    meal_plan_id REFERENCES meal_plan(id) ON DELETE CASCADE,
     recipe_id REFERENCES recipes(id)
 );
