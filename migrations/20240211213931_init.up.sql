@@ -28,7 +28,8 @@ CREATE TABLE meal_plan (
     id uuid PRIMARY KEY,
     owner_id REFERENCES users(id),
     start_date DATE NOT NULL,
-    end_date DATE NOT NULL
+    end_date DATE NOT NULL,
+    CHECK (start_date <= end_date)
 );
 
 CREATE TABLE meal_plan_recipe (
