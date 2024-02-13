@@ -11,7 +11,7 @@ CREATE TABLE products (
 
 CREATE TABLE recipes (
     id uuid PRIMARY KEY,
-    name VARCHAR(128) NOT NULL,
+    title VARCHAR(128) NOT NULL,
     description TEXT NOT NULL,
     author_id uuid REFERENCES users(id)
 );
