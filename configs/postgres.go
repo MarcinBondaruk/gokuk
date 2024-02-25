@@ -1,11 +1,10 @@
 package configs
 
 import (
-	"fmt"
 	"log"
 
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+	"github.com/jackc/pgx"
+	"github.com/jackc/pgx/v5"
 )
 
 const (
@@ -16,27 +15,25 @@ const (
 	dbname   = "gokuk"
 )
 
-func GetPostgresConnection() *gorm.DB {
-	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s", host, port, user, password, dbname)
-	db, err := gorm.Open(postgres.Open(dsn))
+func GetPostgresConnection() *pgx.Conn {
+	config := pgx.ConnConfig{
+		Host:     host,
+		Port:     port,
+		User:     user,
+		Password: password,
+		Database: dbname,
+	}
+	conn, err := pgx.Connect(config)
 
 	if err != nil {
 		log.Fatal("can not connect to db. err:", err)
 	}
 
-	return db
+	return conn
 }
 
-func ClosePostgresConnection(db *gorm.DB) {
-	if db != nil {
-		dbObj, err := db.DB()
-		if err != nil {
-			log.Fatal("failed to get database object. err:", err)
-		}
-
-		err = dbObj.Close()
-		if err != nil {
-			log.Fatal("failed to close database connection. err:", err)
-		}
+func ClosePostgresConnection(conn *pgx.Conn) {
+	if conn.IsAlive() {
+		defer conn.Close()
 	}
 }
