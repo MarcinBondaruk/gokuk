@@ -1,7 +1,8 @@
 package controller
 
-type Controller struct{}
+import "github.com/MarcinBondaruk/gokuk/internal/application/service"
 
-func NewController() Controller {
-	return Controller{}
+type Controller struct {
+	RecipeService *service.RecipeService
+	UserService   *service.UserService
 }
