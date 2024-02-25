@@ -1,4 +1,4 @@
-package cooking_book
+package recipe
 
 import (
 	"fmt"
