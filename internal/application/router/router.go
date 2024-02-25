@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func NewRouter(ctrl controller.Controller) *gin.Engine {
+func NewRouter(ctrl *controller.Controller) *gin.Engine {
 	router := gin.Default()
 
 	router.GET("", func(ctx *gin.Context) {

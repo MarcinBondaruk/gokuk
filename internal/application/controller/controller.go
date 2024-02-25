@@ -3,6 +3,13 @@ package controller
 import "github.com/MarcinBondaruk/gokuk/internal/application/service"
 
 type Controller struct {
-	RecipeService *service.RecipeService
-	UserService   *service.UserService
+	recipeService *service.RecipeService
+	userService   *service.UserService
+}
+
+func NewController(recipeService *service.RecipeService, userService *service.UserService) *Controller {
+	return &Controller{
+		recipeService: recipeService,
+		userService:   userService,
+	}
 }

@@ -16,10 +16,7 @@ func main() {
 	recipeService := &service.RecipeService{}
 	userService := &service.UserService{}
 
-	controller := controller.Controller{
-		RecipeService: recipeService,
-		UserService:   userService,
-	}
+	controller := controller.NewController(recipeService, userService)
 	router := router.NewRouter(controller)
 
 	server := &http.Server{
