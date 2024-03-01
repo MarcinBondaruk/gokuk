@@ -1,9 +1,10 @@
 package configs
 
 import (
+	"context"
+	"fmt"
 	"log"
 
-	"github.com/jackc/pgx"
 	"github.com/jackc/pgx/v5"
 )
 
@@ -15,15 +16,14 @@ const (
 	dbname   = "gokuk"
 )
 
+func formatConnectionString() string {
+	return fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+}
+
 func GetPostgresConnection() *pgx.Conn {
-	config := pgx.ConnConfig{
-		Host:     host,
-		Port:     port,
-		User:     user,
-		Password: password,
-		Database: dbname,
-	}
-	conn, err := pgx.Connect(config)
+	config := formatConnectionString()
+	// change conntor to v5 version
+	conn, err := pgx.Connect(context.Background(), config)
 
 	if err != nil {
 		log.Fatal("can not connect to db. err:", err)
@@ -33,7 +33,7 @@ func GetPostgresConnection() *pgx.Conn {
 }
 
 func ClosePostgresConnection(conn *pgx.Conn) {
-	if conn.IsAlive() {
-		defer conn.Close()
+	if !conn.IsClosed() {
+		defer conn.Close(context.Background())
 	}
 }
