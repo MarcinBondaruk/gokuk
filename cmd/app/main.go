@@ -7,14 +7,17 @@ import (
 	"github.com/MarcinBondaruk/gokuk/internal/application/controller"
 	"github.com/MarcinBondaruk/gokuk/internal/application/router"
 	"github.com/MarcinBondaruk/gokuk/internal/application/service"
+	"github.com/MarcinBondaruk/gokuk/internal/infrastructure/repository"
 )
 
 func main() {
 	postgres := configs.GetPostgresConnection()
 	defer configs.ClosePostgresConnection(postgres)
-
+	userRepository := &repository.UserRepositoryImpl{
+		Connection: postgres,
+	}
 	recipeService := &service.RecipeService{}
-	userService := &service.UserService{}
+	userService := &service.UserService{UserRepository: userRepository}
 
 	controller := controller.NewController(recipeService, userService)
 	router := router.NewRouter(controller)

@@ -7,6 +7,51 @@ servers:
   - url: http://gokuk.bendit.dev
     description: Public instance
 paths:
+  /api/v1/users:
+    post:
+      summary: Create new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRequest"
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+        '400':
+          description: Application was unabled to create new user with given parameters
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/v1/users/:id:
+    get:
+      summary: Get user with id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: JSON representing single user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+        '404':
+          description: User with given id does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /api/v1/recipes:
     get:
       summary: Returns a list of recipes.
@@ -294,4 +339,25 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/ProductResponse"
+    UserRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    UserResponse:
+      type: object
+      required:
+        - id
+        - username
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
 
