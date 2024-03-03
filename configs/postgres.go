@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 const (
@@ -20,20 +20,17 @@ func formatConnectionString() string {
 	return fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 }
 
-func GetPostgresConnection() *pgx.Conn {
+func GetPostgresConnection() *pgxpool.Pool {
 	config := formatConnectionString()
-	// change conntor to v5 version
-	conn, err := pgx.Connect(context.Background(), config)
+	pool, err := pgxpool.New(context.Background(), config)
 
 	if err != nil {
 		log.Fatal("can not connect to db. err:", err)
 	}
 
-	return conn
+	return pool
 }
 
-func ClosePostgresConnection(conn *pgx.Conn) {
-	if !conn.IsClosed() {
-		defer conn.Close(context.Background())
-	}
+func ClosePostgresConnection(pool *pgxpool.Pool) {
+	pool.Close()
 }

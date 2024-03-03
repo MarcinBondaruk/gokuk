@@ -5,11 +5,11 @@ import (
 
 	"github.com/MarcinBondaruk/gokuk/internal/domain/user"
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type UserRepositoryImpl struct {
-	Connection *pgx.Conn
+	Connection *pgxpool.Pool
 }
 
 func (u UserRepositoryImpl) Add(newUser *user.User) error {

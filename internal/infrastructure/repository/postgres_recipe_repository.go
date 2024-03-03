@@ -5,11 +5,11 @@ import (
 
 	"github.com/MarcinBondaruk/gokuk/internal/domain/recipe"
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type PostgresRecipeRepo struct {
-	Connection *pgx.Conn
+	Connection *pgxpool.Pool
 }
 
 func (rr PostgresRecipeRepo) Add(r *recipe.Recipe) error {

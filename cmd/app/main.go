@@ -13,11 +13,12 @@ import (
 func main() {
 	postgres := configs.GetPostgresConnection()
 	defer configs.ClosePostgresConnection(postgres)
-	userRepository := &repository.UserRepositoryImpl{
+
+	userRepository := repository.UserRepositoryImpl{
 		Connection: postgres,
 	}
 
-	userService := &service.UserService{UserRepository: userRepository}
+	userService := &service.UserService{UserRepository: &userRepository}
 
 	controller := controller.NewController(
 		controller.NewMenuController(),
