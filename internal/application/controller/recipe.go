@@ -16,7 +16,7 @@ func (c Controller) CreateRecipe(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, response.RecipeResponse{})
+	ctx.JSON(http.StatusCreated, response.RecipeResponse{})
 }
 
 func (c Controller) GetRecipes(ctx *gin.Context) {

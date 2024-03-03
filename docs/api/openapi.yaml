@@ -216,6 +216,32 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/ProductResponse"
+  /api/v1/products/bulk-add:
+    post:
+      summary: Add multiple products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/ProductRequest"
+      responses:
+        '201':
+          description: Products added
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProductsBulkAddResponse"
+        '400':
+          description: Application was unabled to add new products with given parameters
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     ErrorResponse:
@@ -329,6 +355,16 @@ components:
           type: string
         producer:
           type: string
+    ProductsBulkAddResponse:
+      type: object
+      properties:
+        productsAdded:
+          type: integer
+        productIds:
+          type: array
+          items:
+            type: string
+            format: uuid
     ShoppingListResponse:
       type: object
       properties:

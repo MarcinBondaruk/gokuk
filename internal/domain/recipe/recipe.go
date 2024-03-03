@@ -12,6 +12,16 @@ type Recipe struct {
 	ingredients []Ingredient
 }
 
+func NewRecipe(id, authorId uuid.UUID, title, description string, ingredients []Ingredient) *Recipe {
+	return &Recipe{
+		id:          id,
+		authorId:    authorId,
+		title:       title,
+		description: description,
+		ingredients: ingredients,
+	}
+}
+
 func (r *Recipe) Id() string {
 	return r.id.String()
 }

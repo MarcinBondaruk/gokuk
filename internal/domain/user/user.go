@@ -27,7 +27,3 @@ func (u *User) Username() string {
 func (u *User) Password() string {
 	return u.password
 }
-
-func (u *User) Authenticate(secret string) bool {
-	return secret == u.password
-}
