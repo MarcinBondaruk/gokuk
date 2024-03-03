@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/MarcinBondaruk/gokuk/internal/application/controller"
-	"github.com/gin-contrib/pprof"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,24 +18,24 @@ func NewRouter(ctrl *controller.Controller) *gin.Engine {
 	})
 
 	apiV1 := router.Group("/api/v1")
+
 	recipes := apiV1.Group("/recipes")
-	recipes.POST("", ctrl.CreateRecipe)
-	recipes.GET("", ctrl.GetRecipes)
-	recipes.GET("/shopping-list", ctrl.CreateShoppingListFromRecipes)
-	recipes.GET("/:recipeId", ctrl.GetRecipeById)
+	recipes.POST("", ctrl.RecipeController.CreateRecipe)
+	recipes.GET("", ctrl.RecipeController.GetRecipes)
+	recipes.GET("/shopping-list", ctrl.RecipeController.CreateShoppingListFromRecipes)
+	recipes.GET("/:recipeId", ctrl.RecipeController.GetRecipeById)
 
 	mealPlan := apiV1.Group("/meal-plans")
-	mealPlan.POST("", ctrl.CreateMealPlan)
-	mealPlan.GET("/:mealPlanId/shopping-list", ctrl.GetShoppingListForMealPlan)
+	mealPlan.POST("", ctrl.MenuController.CreateMealPlan)
+	mealPlan.GET("/:mealPlanId/shopping-list", ctrl.MenuController.GetShoppingListForMealPlan)
 
 	products := apiV1.Group("/products")
-	products.GET("", ctrl.GetProducts)
-	products.POST("/bulk-add", ctrl.BulkAdd)
+	products.GET("", ctrl.ProductController.GetProducts)
+	products.POST("/bulk-add", ctrl.ProductController.BulkAddProducts)
 
 	users := apiV1.Group("/users")
-	users.POST("", ctrl.CreateUser)
-	users.GET("/:userId", ctrl.GetUser)
+	users.POST("", ctrl.UserController.CreateUser)
+	users.GET("/:userId", ctrl.UserController.GetUser)
 
-	pprof.Register(router)
 	return router
 }

@@ -16,10 +16,16 @@ func main() {
 	userRepository := &repository.UserRepositoryImpl{
 		Connection: postgres,
 	}
-	recipeService := &service.RecipeService{}
+
 	userService := &service.UserService{UserRepository: userRepository}
 
-	controller := controller.NewController(recipeService, userService)
+	controller := controller.NewController(
+		controller.NewMenuController(),
+		controller.NewProductController(&service.ProductService{}),
+		controller.NewRecipeController(&service.RecipeService{}),
+		controller.NewUserController(userService),
+	)
+
 	router := router.NewRouter(controller)
 
 	server := &http.Server{

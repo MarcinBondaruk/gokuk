@@ -12,7 +12,13 @@ type ProductController struct {
 	productService *service.ProductService
 }
 
-func (pc ProductController) BulkAdd(ctx *gin.Context) {
+func NewProductController(productService *service.ProductService) *ProductController {
+	return &ProductController{
+		productService: productService,
+	}
+}
+
+func (pc ProductController) BulkAddProducts(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, response.ProductsBulkAddResponse{})
 }
 

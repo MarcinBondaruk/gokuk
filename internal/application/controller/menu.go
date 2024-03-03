@@ -10,7 +10,7 @@ import (
 type MenuController struct {
 }
 
-func NewMealPlanController() *MenuController {
+func NewMenuController() *MenuController {
 	return &MenuController{}
 }
 

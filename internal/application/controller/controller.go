@@ -1,10 +1,10 @@
 package controller
 
 type Controller struct {
-	menuController    *MenuController
-	productController *ProductController
-	recipeController  *RecipeController
-	userController    *UserController
+	MenuController    *MenuController
+	ProductController *ProductController
+	RecipeController  *RecipeController
+	UserController    *UserController
 }
 
 func NewController(
@@ -14,9 +14,9 @@ func NewController(
 	userController *UserController,
 ) *Controller {
 	return &Controller{
-		menuController:    menuController,
-		productController: productController,
-		recipeController:  recipeController,
-		userController:    userController,
+		MenuController:    menuController,
+		ProductController: productController,
+		RecipeController:  recipeController,
+		UserController:    userController,
 	}
 }
