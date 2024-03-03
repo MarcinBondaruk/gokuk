@@ -6,10 +6,21 @@ import (
 
 	"github.com/MarcinBondaruk/gokuk/internal/application/api/request"
 	"github.com/MarcinBondaruk/gokuk/internal/application/api/response"
+	"github.com/MarcinBondaruk/gokuk/internal/application/service"
 	"github.com/gin-gonic/gin"
 )
 
-func (c Controller) CreateUser(ctx *gin.Context) {
+type UserController struct {
+	userService *service.UserService
+}
+
+func NewUserController(userService *service.UserService) *UserController {
+	return &UserController{
+		userService: userService,
+	}
+}
+
+func (uc UserController) CreateUser(ctx *gin.Context) {
 	var reqBody request.UserRequest
 
 	if err := ctx.ShouldBindJSON(&reqBody); err != nil {
@@ -17,7 +28,7 @@ func (c Controller) CreateUser(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, nil)
 	}
 
-	id, err := c.userService.CreateUser(reqBody.Username, reqBody.Password)
+	id, err := uc.userService.CreateUser(reqBody.Username, reqBody.Password)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, nil)
@@ -31,10 +42,10 @@ func (c Controller) CreateUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, resp)
 }
 
-func (c Controller) GetUser(ctx *gin.Context) {
+func (uc UserController) GetUser(ctx *gin.Context) {
 	userId := ctx.Param("userId")
 
-	user, err := c.userService.GetUser(userId)
+	user, err := uc.userService.GetUser(userId)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, nil)

@@ -7,10 +7,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (c Controller) CreateMealPlan(ctx *gin.Context) {
+type MenuController struct {
+}
+
+func NewMealPlanController() *MenuController {
+	return &MenuController{}
+}
+
+func (mc MenuController) CreateMealPlan(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, response.MealPlanResponse{})
 }
 
-func (c Controller) GetShoppingListForMealPlan(ctx *gin.Context) {
+func (mc MenuController) GetShoppingListForMealPlan(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response.ShoppingListResponse{})
 }
