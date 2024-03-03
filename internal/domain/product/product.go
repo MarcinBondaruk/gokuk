@@ -3,8 +3,9 @@ package product
 import "github.com/google/uuid"
 
 type Product struct {
-	id   uuid.UUID
-	name string
+	id       uuid.UUID
+	name     string
+	category string
 }
 
 func (p *Product) Id() string {
@@ -13,4 +14,8 @@ func (p *Product) Id() string {
 
 func (p *Product) Name() string {
 	return p.name
+}
+
+func (p *Product) Category() string {
+	return p.category
 }

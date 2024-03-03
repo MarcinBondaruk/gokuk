@@ -339,7 +339,7 @@ components:
       properties:
         name:
           type: string
-        type:
+        category:
           type: string
     ProductResponse:
       type: object
@@ -349,7 +349,7 @@ components:
           format: uuid
         name:
           type: string
-        type:
+        category:
           type: string
     ProductsBulkAddResponse:
       type: object
