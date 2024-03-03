@@ -7,6 +7,7 @@ CREATE TABLE users (
 CREATE TABLE products (
     id uuid PRIMARY KEY,
     name VARCHAR(32) NOT NULL
+    type VARCHAR(32) NOT NULL
 );
 
 CREATE TABLE recipes (

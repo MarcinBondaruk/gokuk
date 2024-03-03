@@ -335,25 +335,21 @@ components:
       type: object
       required:
         - name
-        - producer
+        - type
       properties:
         name:
           type: string
-        producer:
+        type:
           type: string
     ProductResponse:
       type: object
-      required:
-        - id
-        - name
-        - producer
       properties:
         id:
           type: string
           format: uuid
         name:
           type: string
-        producer:
+        type:
           type: string
     ProductsBulkAddResponse:
       type: object

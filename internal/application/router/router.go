@@ -31,6 +31,7 @@ func NewRouter(ctrl *controller.Controller) *gin.Engine {
 
 	products := apiV1.Group("/products")
 	products.GET("", ctrl.GetProducts)
+	products.POST("/bulk-add", ctrl.BulkAdd)
 
 	users := apiV1.Group("/users")
 	users.POST("", ctrl.CreateUser)
