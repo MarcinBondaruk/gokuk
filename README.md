@@ -10,3 +10,12 @@ API: https://marcinbondaruk.github.io/gokuk/
 
 ## Advanced Functionalities
 1. Suggest Recipes based on leftovers from previous cooking
+
+
+## About Project
+
+### Migrations
+` go-migrate -path migrations -database "postgres://postgres:postgres@localhost:5432/gokuk?sslmode=disable" up`
+
+* repositories - retrieve and put away domain objects
+* query - bypass domain objects

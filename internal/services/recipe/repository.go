@@ -1,9 +1,8 @@
-package repository
+package recipe
 
 import (
 	"context"
 
-	"github.com/MarcinBondaruk/gokuk/internal/domain/recipe"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -12,8 +11,8 @@ type PostgresRecipeRepo struct {
 	Connection *pgxpool.Pool
 }
 
-func (rr PostgresRecipeRepo) Add(r *recipe.Recipe) error {
-	_, err := rr.Connection.Exec(context.Background(), "INSERT INTO recipes (id, author_id, title, description) VALUES ($1, $2, $3, $4)", r.Id(), r.AuthorId(), r.Title(), r.Description())
+func (rr PostgresRecipeRepo) Add(r *recipe) error {
+	_, err := rr.Connection.Exec(context.Background(), "INSERT INTO recipes (id, author_id, title, description) VALUES ($1, $2, $3, $4)", r.id, r.authorId, r.title, r.description)
 
 	if err != nil {
 		return err
@@ -22,7 +21,7 @@ func (rr PostgresRecipeRepo) Add(r *recipe.Recipe) error {
 	return nil
 }
 
-func (rr PostgresRecipeRepo) Retrieve(id string) (*recipe.Recipe, error) {
+func (rr PostgresRecipeRepo) Retrieve(id string) (*recipe, error) {
 	var recipeId string
 	var authorId string
 	var title string
@@ -46,6 +45,6 @@ func (rr PostgresRecipeRepo) Retrieve(id string) (*recipe.Recipe, error) {
 		return nil, err
 	}
 
-	recipe := recipe.NewRecipe(recipeIdUUID, authorIdUUID, title, description, nil)
+	recipe := NewRecipe(recipeIdUUID, authorIdUUID, title, description, nil)
 	return recipe, nil
 }
