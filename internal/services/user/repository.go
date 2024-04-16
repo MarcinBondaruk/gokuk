@@ -2,6 +2,8 @@ package user
 
 import (
 	"context"
+	_ "embed"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -11,8 +13,18 @@ type UserRepository struct {
 	Connection *pgxpool.Pool
 }
 
+func NewUserRepository(connection *pgxpool.Pool) UserRepository {
+	return UserRepository{
+		Connection: connection,
+	}
+}
+
+//go:embed sql/CreateUser.sql
+var createUserQuery string
+
 func (u UserRepository) Add(newUser *user) error {
-	_, err := u.Connection.Exec(context.Background(), "INSERT INTO users(id, username, password) VALUES($1, $2, $3)", newUser.id.String(), newUser.username, newUser.passwordHash)
+	fmt.Printf("added user %v \n", newUser)
+	_, err := u.Connection.Exec(context.Background(), createUserQuery, newUser.id.String(), newUser.username, newUser.passwordHash)
 
 	if err != nil {
 		return err

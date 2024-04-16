@@ -1,4 +1,4 @@
-package configs
+package config
 
 import (
 	"context"
@@ -8,6 +8,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
+// TODO: use envs
 const (
 	host     = "localhost"
 	port     = 5432
@@ -28,6 +29,7 @@ func GetPostgresConnection() *pgxpool.Pool {
 		log.Fatal("can not connect to db. err:", err)
 	}
 
+	log.Print("db initialized")
 	return pool
 }
 

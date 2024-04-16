@@ -12,17 +12,17 @@ type CreateUserCommand struct {
 	Password string
 }
 
-type usersService struct {
+type UserService struct {
 	userRepo UserRepository
 }
 
-func NewUsersService(userRepo UserRepository) *usersService {
-	return &usersService{
+func NewUserService(userRepo UserRepository) UserService {
+	return UserService{
 		userRepo: userRepo,
 	}
 }
 
-func (us *usersService) CreateUser(cmd CreateUserCommand) error {
+func (us *UserService) CreateUser(cmd CreateUserCommand) error {
 	userID, err := uuid.NewV7()
 	userPasswordHash, _ := bcrypt.GenerateFromPassword([]byte(cmd.Password), 12)
 
