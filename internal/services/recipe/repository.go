@@ -7,11 +7,17 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-type PostgresRecipeRepo struct {
+type RecipeRepository struct {
 	Connection *pgxpool.Pool
 }
 
-func (rr PostgresRecipeRepo) Add(r *recipe) error {
+func NewRecipeRepository(connection *pgxpool.Pool) RecipeRepository {
+	return RecipeRepository{
+		Connection: connection,
+	}
+}
+
+func (rr RecipeRepository) Add(r *recipe) error {
 	_, err := rr.Connection.Exec(context.Background(), "INSERT INTO recipes (id, author_id, title, description) VALUES ($1, $2, $3, $4)", r.id, r.authorId, r.title, r.description)
 
 	if err != nil {
@@ -21,7 +27,7 @@ func (rr PostgresRecipeRepo) Add(r *recipe) error {
 	return nil
 }
 
-func (rr PostgresRecipeRepo) Retrieve(id string) (*recipe, error) {
+func (rr RecipeRepository) Retrieve(id string) (*recipe, error) {
 	var recipeId string
 	var authorId string
 	var title string
@@ -47,4 +53,9 @@ func (rr PostgresRecipeRepo) Retrieve(id string) (*recipe, error) {
 
 	recipe := NewRecipe(recipeIdUUID, authorIdUUID, title, description, nil)
 	return recipe, nil
+}
+
+func (rr RecipeRepository) GetRecipes() ([]*RecipeView, error) {
+	// return empty slice for now
+	return []*RecipeView{}, nil
 }
