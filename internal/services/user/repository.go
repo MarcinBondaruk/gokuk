@@ -3,7 +3,6 @@ package user
 import (
 	"context"
 	_ "embed"
-	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -22,8 +21,7 @@ func NewUserRepository(connection *pgxpool.Pool) UserRepository {
 //go:embed sql/CreateUser.sql
 var createUserQuery string
 
-func (u UserRepository) Add(newUser *user) error {
-	fmt.Printf("added user %v \n", newUser)
+func (u *UserRepository) Add(newUser *user) error {
 	_, err := u.Connection.Exec(context.Background(), createUserQuery, newUser.id.String(), newUser.username, newUser.passwordHash)
 
 	if err != nil {
@@ -33,7 +31,7 @@ func (u UserRepository) Add(newUser *user) error {
 	return nil
 }
 
-func (u UserRepository) Retrieve(id string) (*user, error) {
+func (u *UserRepository) Retrieve(id string) (*user, error) {
 	var userId string
 	var username string
 	var passwordHash string

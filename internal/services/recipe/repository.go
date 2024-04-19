@@ -2,23 +2,58 @@ package recipe
 
 import (
 	"context"
+	_ "embed"
+	"log"
 
-	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type RecipeRepository struct {
-	Connection *pgxpool.Pool
+	connPool *pgxpool.Pool
 }
 
 func NewRecipeRepository(connection *pgxpool.Pool) RecipeRepository {
 	return RecipeRepository{
-		Connection: connection,
+		connPool: connection,
 	}
 }
 
-func (rr RecipeRepository) Add(r *recipe) error {
-	_, err := rr.Connection.Exec(context.Background(), "INSERT INTO recipes (id, author_id, title, description) VALUES ($1, $2, $3, $4)", r.id, r.authorId, r.title, r.description)
+func (rr *RecipeRepository) Add(r *recipe) error {
+	tx, err := rr.connPool.Begin(context.Background())
+	if err != nil {
+		return err
+	}
+
+	recipeArgs := pgx.NamedArgs{
+		"id":          r.ID,
+		"author_id":   r.authorID,
+		"title":       r.title,
+		"description": r.description,
+	}
+
+	_, err = tx.Exec(context.Background(), "INSERT INTO recipes (id, author_id, title, description) VALUES (@id, @author_id, @title, @description)", recipeArgs)
+
+	if err != nil {
+		tx.Rollback(context.Background())
+		return err
+	}
+
+	for _, ingredient := range r.ingredients {
+		inredientArgs := pgx.NamedArgs{
+			"recipe_id": r.ID,
+			"name":      ingredient.Name,
+			"quantity":  ingredient.Quantity,
+			"unit":      ingredient.Unit,
+		}
+		_, err = tx.Exec(context.Background(), "INSERT INTO recipe_ingredient (recipe_id, name, quantity, unit) VALUES (@recipe_id, @name, @quantity, @unit)", inredientArgs)
+		if err != nil {
+			tx.Rollback(context.Background())
+			return err
+		}
+	}
+
+	err = tx.Commit(context.Background())
 
 	if err != nil {
 		return err
@@ -27,35 +62,63 @@ func (rr RecipeRepository) Add(r *recipe) error {
 	return nil
 }
 
-func (rr RecipeRepository) Retrieve(id string) (*recipe, error) {
-	var recipeId string
-	var authorId string
+func (rr *RecipeRepository) Retrieve(id string) (*recipe, error) {
+	var recipeID string
+	var authorID string
 	var title string
 	var description string
+	var ingredients []Ingredient
 
-	// need to query for reciepies with ingredients
-	sql := "SELECT id, author_id, title, description FROM recipes JOIN recipe_ingredient ON recipes.id = recipe_ingredient.recipe_id WHERE id = $1"
-	err := rr.Connection.QueryRow(context.Background(), sql, id).Scan(&recipeId, &authorId, &title, &description)
-
+	err := rr.connPool.QueryRow(context.Background(), "SELECT id, author_id, title, description FROM recipes WHERE id = $1", id).Scan(&recipeID, &authorID, &title, &description)
 	if err != nil {
 		return nil, err
 	}
 
-	recipeIdUUID, err := uuid.Parse(recipeId)
+	err = rr.connPool.QueryRow(context.Background(), "SELECT name, quantity, unit FROM recipe_ingredient WHERE recipe_id = $1", id).Scan(&ingredients)
 	if err != nil {
 		return nil, err
 	}
 
-	authorIdUUID, err := uuid.Parse(authorId)
-	if err != nil {
-		return nil, err
-	}
-
-	recipe := NewRecipe(recipeIdUUID, authorIdUUID, title, description, nil)
-	return recipe, nil
+	return NewRecipe(recipeID, authorID, title, description, ingredients), nil
 }
 
-func (rr RecipeRepository) GetRecipes() ([]*RecipeView, error) {
-	// return empty slice for now
-	return []*RecipeView{}, nil
+// TODO: Add pagination, maybe optimize n+1 problem
+func (rr *RecipeRepository) GetRecipes() ([]RecipeView, error) {
+	recipeViews := []RecipeView{}
+	recipes, err := rr.connPool.Query(context.Background(), "SELECT id, author_id, title, description FROM recipes")
+	if err != nil {
+		return nil, err
+	}
+
+	for recipes.Next() {
+		recipeView := RecipeView{}
+
+		err = recipes.Scan(recipeView.ID, recipeView.AuthorID, recipeView.Title, recipeView.Description)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+
+		ingredients, err := rr.connPool.Query(context.Background(), "SELECT name, quantity, unit FROM recipe_ingredient WHERE recipe_id = $1", recipeView.ID)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+
+		for ingredients.Next() {
+			ingredientView := IngredientView{}
+
+			err := ingredients.Scan(ingredientView.Name, ingredientView.Quantity, ingredientView.Unit)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+
+			recipeView.Ingredients = append(recipeView.Ingredients, ingredientView)
+		}
+
+		recipeViews = append(recipeViews, recipeView)
+	}
+
+	return recipeViews, nil
 }

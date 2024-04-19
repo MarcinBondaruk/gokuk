@@ -24,7 +24,7 @@ func NewUserService(userRepo UserRepository) UserService {
 
 func (us *UserService) CreateUser(cmd CreateUserCommand) error {
 	userID, err := uuid.NewV7()
-	userPasswordHash, _ := bcrypt.GenerateFromPassword([]byte(cmd.Password), 12)
+	userPasswordHash, _ := bcrypt.GenerateFromPassword([]byte(cmd.Password), 12) // COSTLY
 
 	if err != nil {
 		// TODO: Add logger

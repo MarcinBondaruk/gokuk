@@ -25,6 +25,7 @@ func main() {
 	router := http.NewServeMux()
 	router.HandleFunc("POST /api/v1/users", userHandler.CreateUser)
 
+	router.HandleFunc("POST /api/v1/recipes", recipeHandler.CreateRecipe)
 	router.HandleFunc("GET /api/v1/recipes", recipeHandler.GetRecipes)
 
 	server := &http.Server{
