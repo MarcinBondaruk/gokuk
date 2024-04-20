@@ -22,7 +22,7 @@ func NewUserRepository(connection *pgxpool.Pool) UserRepository {
 var createUserQuery string
 
 func (u *UserRepository) Add(newUser *user) error {
-	_, err := u.Connection.Exec(context.Background(), createUserQuery, newUser.id.String(), newUser.username, newUser.passwordHash)
+	_, err := u.Connection.Exec(context.Background(), createUserQuery, newUser.id, newUser.username, newUser.passwordHash)
 
 	if err != nil {
 		return err
@@ -31,6 +31,7 @@ func (u *UserRepository) Add(newUser *user) error {
 	return nil
 }
 
+// TODO: reimplement this method
 func (u *UserRepository) Retrieve(id string) (*user, error) {
 	var userId string
 	var username string

@@ -32,6 +32,7 @@ func GetPostgresConnection() *pgxpool.Pool {
 
 	config.AfterConnect = func(ctx context.Context, conn *pgx.Conn) error {
 		uuid.Register(conn.TypeMap())
+
 		return nil
 	}
 

@@ -36,7 +36,9 @@ func (rs *RecipeService) CreateRecipe(cmd CreateRecipeCmd) error {
 		ingredients = append(ingredients, Ingredient(ingredient))
 	}
 
-	recipe := NewRecipe(recipeID.String(), cmd.AuthorID, cmd.Title, cmd.Description, ingredients)
+	authorID, _ := uuid.Parse(cmd.AuthorID)
+
+	recipe := NewRecipe(recipeID, authorID, cmd.Title, cmd.Description, ingredients)
 
 	return rs.recipeRepository.Add(recipe)
 }

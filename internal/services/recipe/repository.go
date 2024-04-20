@@ -62,26 +62,6 @@ func (rr *RecipeRepository) Add(r *recipe) error {
 	return nil
 }
 
-func (rr *RecipeRepository) Retrieve(id string) (*recipe, error) {
-	var recipeID string
-	var authorID string
-	var title string
-	var description string
-	var ingredients []Ingredient
-
-	err := rr.connPool.QueryRow(context.Background(), "SELECT id, author_id, title, description FROM recipes WHERE id = $1", id).Scan(&recipeID, &authorID, &title, &description)
-	if err != nil {
-		return nil, err
-	}
-
-	err = rr.connPool.QueryRow(context.Background(), "SELECT name, quantity, unit FROM recipe_ingredient WHERE recipe_id = $1", id).Scan(&ingredients)
-	if err != nil {
-		return nil, err
-	}
-
-	return NewRecipe(recipeID, authorID, title, description, ingredients), nil
-}
-
 // TODO: Add pagination, maybe optimize n+1 problem
 func (rr *RecipeRepository) GetRecipes() ([]RecipeView, error) {
 	recipeViews := []RecipeView{}
@@ -93,7 +73,7 @@ func (rr *RecipeRepository) GetRecipes() ([]RecipeView, error) {
 	for recipes.Next() {
 		recipeView := RecipeView{}
 
-		err = recipes.Scan(recipeView.ID, recipeView.AuthorID, recipeView.Title, recipeView.Description)
+		err = recipes.Scan(&recipeView.ID, &recipeView.AuthorID, &recipeView.Title, &recipeView.Description)
 		if err != nil {
 			log.Println(err)
 			continue
@@ -108,7 +88,7 @@ func (rr *RecipeRepository) GetRecipes() ([]RecipeView, error) {
 		for ingredients.Next() {
 			ingredientView := IngredientView{}
 
-			err := ingredients.Scan(ingredientView.Name, ingredientView.Quantity, ingredientView.Unit)
+			err := ingredients.Scan(&ingredientView.Name, &ingredientView.Quantity, &ingredientView.Unit)
 			if err != nil {
 				log.Println(err)
 				continue
