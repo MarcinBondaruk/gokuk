@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/MarcinBondaruk/gokuk/database/extensions/uuid"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -22,8 +24,18 @@ func formatConnectionString() string {
 }
 
 func GetPostgresConnection() *pgxpool.Pool {
-	config := formatConnectionString()
-	pool, err := pgxpool.New(context.Background(), config)
+	connString := formatConnectionString()
+	config, err := pgxpool.ParseConfig(connString)
+	if err != nil {
+		log.Fatal("can not parse db connection string. err:", err)
+	}
+
+	config.AfterConnect = func(ctx context.Context, conn *pgx.Conn) error {
+		uuid.Register(conn.TypeMap())
+		return nil
+	}
+
+	pool, err := pgxpool.NewWithConfig(context.Background(), config)
 
 	if err != nil {
 		log.Fatal("can not connect to db. err:", err)
