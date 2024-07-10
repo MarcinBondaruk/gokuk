@@ -8,7 +8,10 @@ import (
 )
 
 func main() {
-	di := dependencies.Initialize()
+	di, err := dependencies.Initialize()
+	if err != nil {
+		panic(err)
+	}
 	defer di.TearDown()
 
 	router := router.NewRouter(di)
@@ -18,7 +21,7 @@ func main() {
 		Handler: router,
 	}
 
-	err := server.ListenAndServe()
+	err = server.ListenAndServe()
 
 	if err != nil {
 		panic(err)

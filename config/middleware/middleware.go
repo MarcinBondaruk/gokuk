@@ -4,10 +4,10 @@ import "net/http"
 
 type Middleware func(http.HandlerFunc) http.HandlerFunc
 
-func Pipe(handler http.HandlerFunc, middlewares ...Middleware) http.HandlerFunc {
+func Pipe(h http.HandlerFunc, middlewares ...Middleware) http.HandlerFunc {
 	for _, m := range middlewares {
-		handler = m(handler)
+		h = m(h)
 	}
 
-	return handler
+	return h
 }

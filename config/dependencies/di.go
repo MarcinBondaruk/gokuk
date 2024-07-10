@@ -14,8 +14,12 @@ type DependencyContainer struct {
 	RecipeSvc *recipe.RecipeService
 }
 
-func Initialize() *DependencyContainer {
-	database := database.InitConnPool()
+func Initialize() (*DependencyContainer, error) {
+	database, err := database.InitConnPool()
+	if err != nil {
+		return nil, err
+	}
+
 	recipeSvc := recipe.NewRecipeService(database)
 	userSvc := user.NewUserService(database)
 
@@ -23,7 +27,7 @@ func Initialize() *DependencyContainer {
 		database:  database,
 		RecipeSvc: recipeSvc,
 		UserSvc:   userSvc,
-	}
+	}, nil
 }
 
 func (di *DependencyContainer) TearDown() {

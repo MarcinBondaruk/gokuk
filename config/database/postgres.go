@@ -3,7 +3,7 @@ package database
 import (
 	"context"
 	"fmt"
-	"log"
+	"log/slog"
 
 	"github.com/MarcinBondaruk/gokuk/database/extensions/uuid"
 	"github.com/jackc/pgx/v5"
@@ -23,11 +23,12 @@ func formatConnectionString() string {
 	return fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 }
 
-func InitConnPool() *pgxpool.Pool {
+func InitConnPool() (*pgxpool.Pool, error) {
 	connString := formatConnectionString()
 	config, err := pgxpool.ParseConfig(connString)
 	if err != nil {
-		log.Fatal("can not parse db connection string. err:", err)
+		slog.Error("can not parse db connection string", "error:", err)
+		return nil, err
 	}
 
 	config.AfterConnect = func(ctx context.Context, conn *pgx.Conn) error {
@@ -39,9 +40,8 @@ func InitConnPool() *pgxpool.Pool {
 	pool, err := pgxpool.NewWithConfig(context.Background(), config)
 
 	if err != nil {
-		log.Fatal("can not connect to db. err:", err)
+		slog.Error("db failed to connect", "error:", err)
 	}
 
-	log.Print("db initialized")
-	return pool
+	return pool, nil
 }
