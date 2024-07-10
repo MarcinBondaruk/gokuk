@@ -1,25 +1,24 @@
-package http_handler
+package recipe
 
 import (
 	"encoding/json"
 	"net/http"
 
 	"github.com/MarcinBondaruk/gokuk/internal/services/recipe"
-	"github.com/MarcinBondaruk/gokuk/internal/user_interface/http_handler/request"
 )
 
 type RecipeHandler struct {
-	recipeService recipe.RecipeService
+	recipeService *recipe.RecipeService
 }
 
-func NewRecipeHandler(recipeService recipe.RecipeService) RecipeHandler {
-	return RecipeHandler{
+func NewRecipeHandler(recipeService *recipe.RecipeService) *RecipeHandler {
+	return &RecipeHandler{
 		recipeService: recipeService,
 	}
 }
 
 func (rh *RecipeHandler) CreateRecipe(w http.ResponseWriter, r *http.Request) {
-	var request request.CreateRecipeRequest
+	var request CreateRecipeRequest
 
 	err := json.NewDecoder(r.Body).Decode(&request)
 

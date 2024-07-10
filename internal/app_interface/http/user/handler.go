@@ -1,27 +1,24 @@
-package http_handler
+package user
 
 import (
 	"encoding/json"
 	"net/http"
 
 	"github.com/MarcinBondaruk/gokuk/internal/services/user"
-	"github.com/MarcinBondaruk/gokuk/internal/user_interface/http_handler/request"
 )
 
 type UserHandler struct {
-	userService user.UserService
+	userService *user.UserService
 }
 
-func NewUserHandler(
-	userService user.UserService,
-) UserHandler {
-	return UserHandler{
+func NewUserHandler(userService *user.UserService) *UserHandler {
+	return &UserHandler{
 		userService: userService,
 	}
 }
 
 func (u *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
-	var request request.CreateUserRequest
+	var request CreateUserRequest
 
 	err := json.NewDecoder(r.Body).Decode(&request)
 

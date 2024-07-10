@@ -1,4 +1,4 @@
-package request
+package recipe
 
 import (
 	"errors"

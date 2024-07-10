@@ -9,17 +9,17 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-type RecipeRepository struct {
+type repository struct {
 	connPool *pgxpool.Pool
 }
 
-func NewRecipeRepository(connection *pgxpool.Pool) RecipeRepository {
-	return RecipeRepository{
+func newRecipeRepository(connection *pgxpool.Pool) *repository {
+	return &repository{
 		connPool: connection,
 	}
 }
 
-func (rr *RecipeRepository) Add(r *recipe) error {
+func (rr *repository) Add(r *recipe) error {
 	tx, err := rr.connPool.Begin(context.Background())
 	if err != nil {
 		return err
@@ -63,7 +63,7 @@ func (rr *RecipeRepository) Add(r *recipe) error {
 }
 
 // TODO: Add pagination, maybe optimize n+1 problem
-func (rr *RecipeRepository) GetRecipes() ([]RecipeView, error) {
+func (rr *repository) GetRecipes() ([]RecipeView, error) {
 	recipeViews := []RecipeView{}
 	recipes, err := rr.connPool.Query(context.Background(), "SELECT id, author_id, title, description FROM recipes")
 	if err != nil {

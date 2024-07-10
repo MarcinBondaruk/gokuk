@@ -1,9 +1,12 @@
 package recipe
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgxpool"
+)
 
 type RecipeService struct {
-	recipeRepository RecipeRepository
+	recipeRepository *repository
 }
 
 type CreateRecipeCmd struct {
@@ -19,9 +22,9 @@ type CmdIngredient struct {
 	Unit     string
 }
 
-func NewRecipeService(recipeRepository RecipeRepository) RecipeService {
-	return RecipeService{
-		recipeRepository: recipeRepository,
+func NewRecipeService(db *pgxpool.Pool) *RecipeService {
+	return &RecipeService{
+		recipeRepository: newRecipeRepository(db),
 	}
 }
 

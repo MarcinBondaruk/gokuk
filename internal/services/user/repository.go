@@ -8,12 +8,12 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-type UserRepository struct {
+type userRepository struct {
 	Connection *pgxpool.Pool
 }
 
-func NewUserRepository(connection *pgxpool.Pool) UserRepository {
-	return UserRepository{
+func newUserRepository(connection *pgxpool.Pool) userRepository {
+	return userRepository{
 		Connection: connection,
 	}
 }
@@ -21,7 +21,7 @@ func NewUserRepository(connection *pgxpool.Pool) UserRepository {
 //go:embed sql/CreateUser.sql
 var createUserQuery string
 
-func (u *UserRepository) Add(newUser *user) error {
+func (u *userRepository) Add(newUser *user) error {
 	_, err := u.Connection.Exec(context.Background(), createUserQuery, newUser.id, newUser.username, newUser.passwordHash)
 
 	if err != nil {
@@ -32,7 +32,7 @@ func (u *UserRepository) Add(newUser *user) error {
 }
 
 // TODO: reimplement this method
-func (u *UserRepository) Retrieve(id string) (*user, error) {
+func (u *userRepository) Retrieve(id string) (*user, error) {
 	var userId string
 	var username string
 	var passwordHash string

@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -13,12 +14,12 @@ type CreateUserCommand struct {
 }
 
 type UserService struct {
-	userRepo UserRepository
+	userRepository userRepository
 }
 
-func NewUserService(userRepo UserRepository) UserService {
-	return UserService{
-		userRepo: userRepo,
+func NewUserService(db *pgxpool.Pool) *UserService {
+	return &UserService{
+		userRepository: newUserRepository(db),
 	}
 }
 
@@ -31,5 +32,5 @@ func (us *UserService) CreateUser(cmd CreateUserCommand) error {
 		log.Println("failed to create id: ", err)
 	}
 	user := NewUser(userID, cmd.Username, string(userPasswordHash))
-	return us.userRepo.Add(user)
+	return us.userRepository.Add(user)
 }

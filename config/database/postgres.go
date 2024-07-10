@@ -1,4 +1,4 @@
-package config
+package database
 
 import (
 	"context"
@@ -23,7 +23,7 @@ func formatConnectionString() string {
 	return fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 }
 
-func GetPostgresConnection() *pgxpool.Pool {
+func InitConnPool() *pgxpool.Pool {
 	connString := formatConnectionString()
 	config, err := pgxpool.ParseConfig(connString)
 	if err != nil {
@@ -44,8 +44,4 @@ func GetPostgresConnection() *pgxpool.Pool {
 
 	log.Print("db initialized")
 	return pool
-}
-
-func ClosePostgresConnection(pool *pgxpool.Pool) {
-	pool.Close()
 }
