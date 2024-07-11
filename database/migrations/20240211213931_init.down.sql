@@ -1,6 +1,4 @@
-DROP TABLE IF EXISTS meal_plan_recipe;
-DROP TABLE IF EXISTS meal_plan;
 DROP TABLE IF EXISTS recipe_ingredient;
-DROP TABLE IF EXISTS products;
-DROP TABLE IF EXISTS recipes;
-DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS ingredient;
+DROP TABLE IF EXISTS recipe;
+DROP TABLE IF EXISTS user;
