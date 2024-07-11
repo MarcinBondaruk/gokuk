@@ -14,9 +14,9 @@ CREATE TABLE IF NOT EXISTS ingredient (
 
 CREATE TABLE IF NOT EXISTS recipe (
     id bigserial NOT NULL PRIMARY KEY,
+    author_id uuid REFERENCES users(id),
     title VARCHAR(128) NOT NULL,
     description TEXT NOT NULL,
-    author_id uuid REFERENCES users(id)
 
     created_at timestamp with time zone NOT NULL default current_timestamp
 );

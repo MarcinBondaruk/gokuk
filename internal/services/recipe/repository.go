@@ -19,23 +19,28 @@ func newRecipeRepository(connection *pgxpool.Pool) *repository {
 	}
 }
 
-func (rr *repository) Add(r *recipe) error {
-	tx, err := rr.connPool.Begin(context.Background())
+//go:embed sql/InsertRecipe.sql
+var insertRecipeSql string
+
+//go:embed sql/InsertRecipeIngredient.sql
+var insertRecipeIngredientSql string
+
+func (rr *repository) Add(ctx context.Context, r *recipe) error {
+	tx, err := rr.connPool.Begin(ctx) //TODO: move to middleware
 	if err != nil {
 		return err
 	}
 
 	recipeArgs := pgx.NamedArgs{
-		"id":          r.ID,
 		"author_id":   r.authorID,
 		"title":       r.title,
 		"description": r.description,
 	}
 
-	_, err = tx.Exec(context.Background(), "INSERT INTO recipes (id, author_id, title, description) VALUES (@id, @author_id, @title, @description)", recipeArgs)
+	err = tx.QueryRow(ctx, insertRecipeSql, recipeArgs).Scan(r.ID)
 
 	if err != nil {
-		tx.Rollback(context.Background())
+		tx.Rollback(ctx)
 		return err
 	}
 
@@ -43,17 +48,18 @@ func (rr *repository) Add(r *recipe) error {
 		inredientArgs := pgx.NamedArgs{
 			"recipe_id": r.ID,
 			"name":      ingredient.Name,
-			"quantity":  ingredient.Quantity,
+			"quantity":  ingredient.Value,
 			"unit":      ingredient.Unit,
 		}
-		_, err = tx.Exec(context.Background(), "INSERT INTO recipe_ingredient (recipe_id, name, quantity, unit) VALUES (@recipe_id, @name, @quantity, @unit)", inredientArgs)
+		_, err := tx.Exec(ctx, insertRecipeIngredientSql, inredientArgs)
+
 		if err != nil {
-			tx.Rollback(context.Background())
+			tx.Rollback(ctx)
 			return err
 		}
 	}
 
-	err = tx.Commit(context.Background())
+	err = tx.Commit(ctx)
 
 	if err != nil {
 		return err
@@ -62,10 +68,9 @@ func (rr *repository) Add(r *recipe) error {
 	return nil
 }
 
-// TODO: Add pagination, maybe optimize n+1 problem
-func (rr *repository) GetRecipes() ([]RecipeView, error) {
+func (rr *repository) GetRecipes(ctx context.Context) ([]RecipeView, error) {
 	recipeViews := []RecipeView{}
-	recipes, err := rr.connPool.Query(context.Background(), "SELECT id, author_id, title, description FROM recipes")
+	recipes, err := rr.connPool.Query(ctx, "SELECT id, author_id, title, description FROM recipe")
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +84,7 @@ func (rr *repository) GetRecipes() ([]RecipeView, error) {
 			continue
 		}
 
-		ingredients, err := rr.connPool.Query(context.Background(), "SELECT name, quantity, unit FROM recipe_ingredient WHERE recipe_id = $1", recipeView.ID)
+		ingredients, err := rr.connPool.Query(ctx, "SELECT name, quantity, unit FROM recipe_ingredient WHERE recipe_id = $1", recipeView.ID)
 		if err != nil {
 			log.Println(err)
 			continue

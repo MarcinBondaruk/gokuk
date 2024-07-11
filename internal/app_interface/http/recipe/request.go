@@ -16,7 +16,7 @@ const (
 )
 
 type CreateRecipeRequest struct {
-	AuthorID    string       `json:"author_id"`
+	AuthorID    int64        `json:"author_id"`
 	Title       string       `json:"title"`
 	Description string       `json:"description"`
 	Ingredients []Ingredient `json:"ingredients"`
@@ -63,9 +63,9 @@ func (crr *CreateRecipeRequest) ToCommand() recipe.CreateRecipeCmd {
 
 	for _, ingredient := range crr.Ingredients {
 		ingredients = append(ingredients, recipe.CmdIngredient{
-			Name:     ingredient.Name,
-			Quantity: ingredient.Quantity,
-			Unit:     ingredient.Unit,
+			Name:  ingredient.Name,
+			Value: ingredient.Quantity,
+			Unit:  ingredient.Unit,
 		})
 	}
 

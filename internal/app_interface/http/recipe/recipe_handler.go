@@ -32,7 +32,7 @@ func (rh *RecipeHandler) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = rh.recipeService.CreateRecipe(request.ToCommand())
+	err = rh.recipeService.CreateRecipe(r.Context(), request.ToCommand())
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -44,7 +44,7 @@ func (rh *RecipeHandler) CreateRecipe(w http.ResponseWriter, r *http.Request) {
 }
 
 func (rh *RecipeHandler) GetRecipes(w http.ResponseWriter, r *http.Request) {
-	recipes, err := rh.recipeService.GetRecipes()
+	recipes, err := rh.recipeService.GetRecipes(r.Context())
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

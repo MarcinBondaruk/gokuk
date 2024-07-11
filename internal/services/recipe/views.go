@@ -1,10 +1,8 @@
 package recipe
 
-import "github.com/google/uuid"
-
 type RecipeView struct {
-	ID          uuid.UUID        `json:"id"`
-	AuthorID    string           `json:"author_id"`
+	ID          int64            `json:"id"`
+	AuthorID    int64            `json:"author_id"`
 	Title       string           `json:"title"`
 	Description string           `json:"description"`
 	Ingredients []IngredientView `json:"ingredients"`

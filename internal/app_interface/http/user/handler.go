@@ -37,7 +37,7 @@ func (u *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		Password: request.Password,
 	}
 
-	err = u.userService.CreateUser(cmd)
+	err = u.userService.CreateUser(r.Context(), cmd)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

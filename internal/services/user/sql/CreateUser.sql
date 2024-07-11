@@ -1,2 +1,4 @@
-INSERT INTO users(id, username, passwordHash)
-    VALUES($1, $2, $3)
+INSERT INTO users(username, passwordHash)
+VALUES(@username, @passwordHash)
+RETURNING
+    id

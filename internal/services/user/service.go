@@ -1,9 +1,8 @@
 package user
 
 import (
-	"log"
+	"context"
 
-	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -23,14 +22,9 @@ func NewUserService(db *pgxpool.Pool) *UserService {
 	}
 }
 
-func (us *UserService) CreateUser(cmd CreateUserCommand) error {
-	userID, err := uuid.NewV7()
+func (us *UserService) CreateUser(ctx context.Context, cmd CreateUserCommand) error {
 	userPasswordHash, _ := bcrypt.GenerateFromPassword([]byte(cmd.Password), 12) // COSTLY
 
-	if err != nil {
-		// TODO: Add logger
-		log.Println("failed to create id: ", err)
-	}
-	user := NewUser(userID, cmd.Username, string(userPasswordHash))
-	return us.userRepository.Add(user)
+	user := NewUser(cmd.Username, string(userPasswordHash))
+	return us.userRepository.Add(ctx, user)
 }

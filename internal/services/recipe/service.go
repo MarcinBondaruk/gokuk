@@ -1,7 +1,8 @@
 package recipe
 
 import (
-	"github.com/google/uuid"
+	"context"
+
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -10,16 +11,16 @@ type RecipeService struct {
 }
 
 type CreateRecipeCmd struct {
-	AuthorID    string
+	AuthorID    int64
 	Title       string
 	Description string
 	Ingredients []CmdIngredient
 }
 
 type CmdIngredient struct {
-	Name     string
-	Quantity int
-	Unit     string
+	Name  string
+	Value int
+	Unit  string
 }
 
 func NewRecipeService(db *pgxpool.Pool) *RecipeService {
@@ -28,24 +29,17 @@ func NewRecipeService(db *pgxpool.Pool) *RecipeService {
 	}
 }
 
-func (rs *RecipeService) CreateRecipe(cmd CreateRecipeCmd) error {
-	recipeID, err := uuid.NewV7()
-	if err != nil {
-		return err
-	}
-
+func (rs *RecipeService) CreateRecipe(ctx context.Context, cmd CreateRecipeCmd) error {
 	ingredients := make([]Ingredient, 0, len(cmd.Ingredients))
 	for _, ingredient := range cmd.Ingredients {
 		ingredients = append(ingredients, Ingredient(ingredient))
 	}
 
-	authorID, _ := uuid.Parse(cmd.AuthorID)
+	recipe := NewRecipe(cmd.AuthorID, cmd.Title, cmd.Description, ingredients)
 
-	recipe := NewRecipe(recipeID, authorID, cmd.Title, cmd.Description, ingredients)
-
-	return rs.recipeRepository.Add(recipe)
+	return rs.recipeRepository.Add(ctx, recipe)
 }
 
-func (rs *RecipeService) GetRecipes() ([]RecipeView, error) {
-	return rs.recipeRepository.GetRecipes()
+func (rs *RecipeService) GetRecipes(ctx context.Context) ([]RecipeView, error) {
+	return rs.recipeRepository.GetRecipes(ctx)
 }
