@@ -42,10 +42,6 @@ func (u *userRepository) Retrieve(ctx context.Context, id string) (*user, error)
 		return nil, err
 	}
 
-	if err != nil {
-		return nil, err
-	}
-
 	user := NewUser(username, passwordHash)
 	return user, nil
 }
